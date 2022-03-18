@@ -9,21 +9,30 @@ import (
 
 func Colorize(w io.Writer, r io.Reader) error {
 	s := bufio.NewScanner(r)
-	painted := map[string]string{
-		"=== RUN":  YELLOW,
-		"--- FAIL": RED,
-		"--- PASS": GREEN,
-	}
-
+	painted := GoTestOutput()
 	for s.Scan() {
 		line := s.Text()
+		// paint any values
 		for k, v := range painted {
-			line = strings.ReplaceAll(line, k, fmt.Sprintf("%s%s%s", v, k, RESET))
+			line = strings.ReplaceAll(line, k, v)
 		}
 		w.Write([]byte(line))
 		w.Write([]byte("\n"))
 	}
 	return s.Err()
+}
+
+func GoTestOutput() map[string]string {
+	painted := map[string]string{
+		"=== RUN":  YELLOW,
+		"--- FAIL": RED,
+		"--- PASS": GREEN,
+	}
+	// color the values first
+	for k, v := range painted {
+		painted[k] = fmt.Sprintf("%s%s%s", v, k, RESET)
+	}
+	return painted
 }
 
 const (
@@ -32,6 +41,8 @@ const (
 	YELLOW = "\033[33m"
 	RESET  = "\033[0m"
 )
+
+type VTCode uint
 
 /*https://www2.ccs.neu.edu/research/gpc/VonaUtils/vona/terminal/vtansi.htm#colors
 0	Reset all attributes

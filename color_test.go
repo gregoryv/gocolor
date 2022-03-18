@@ -19,5 +19,4 @@ b
 		t.Log(buf.String())
 		t.Error(err)
 	}
-	t.Error(buf.String())
 }
