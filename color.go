@@ -9,22 +9,19 @@ import (
 
 func Colorize(w io.Writer, r io.Reader) error {
 	s := bufio.NewScanner(r)
+	painted := map[string]string{
+		"=== RUN":  YELLOW,
+		"--- FAIL": RED,
+		"--- PASS": GREEN,
+	}
+
 	for s.Scan() {
 		line := s.Text()
-		switch {
-		case strings.HasPrefix(line, "=== RUN"):
-			fmt.Fprintf(w, "%s%s%s%s\n", YELLOW, "=== RUN", RESET, line[8:])
-
-		case strings.HasPrefix(line, "--- FAIL"):
-			fmt.Fprintf(w, "%s%s%s%s\n", RED, "--- FAIL", RESET, line[8:])
-
-		case strings.HasPrefix(line, "=== PASS"):
-			fmt.Fprintf(w, "%s%s%s%s\n", GREEN, "=== PASS", RESET, line[8:])
-
-		default:
-			w.Write([]byte(line))
-			w.Write([]byte("\n"))
+		for k, v := range painted {
+			line = strings.ReplaceAll(line, k, fmt.Sprintf("%s%s%s", v, k, RESET))
 		}
+		w.Write([]byte(line))
+		w.Write([]byte("\n"))
 	}
 	return s.Err()
 }

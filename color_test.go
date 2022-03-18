@@ -9,7 +9,7 @@ import (
 func TestColorize(t *testing.T) {
 	var buf bytes.Buffer
 	input := `=== RUN   TestSomething
-=== PASS   TestSomething
+--- PASS   TestSomething
 --- FAIL
 a
 b
