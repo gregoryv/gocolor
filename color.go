@@ -23,6 +23,7 @@ func Colorize(w io.Writer, r io.Reader) error {
 
 		default:
 			w.Write([]byte(line))
+			w.Write([]byte("\n"))
 		}
 	}
 	return s.Err()
