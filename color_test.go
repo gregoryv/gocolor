@@ -13,6 +13,7 @@ func TestColorize(t *testing.T) {
 --- FAIL
 a
 b
+PASS
 `
 	r := strings.NewReader(input)
 	if err := Colorize(&buf, r); err != nil {
