@@ -5,6 +5,13 @@ import (
 	"errors"
 	"io"
 	"strings"
+
+	"github.com/gregoryv/vt100"
+)
+
+var (
+	fg = vt100.ForegroundColors()
+	vt = vt100.Attributes()
 )
 
 // Colorize paint go test output and returns ErrTestFailed if a test
@@ -14,37 +21,37 @@ func Colorize(w io.Writer, r io.Reader) error {
 	var err error
 	for s.Scan() {
 		line := s.Text()
-		var color string
+		var color vt100.Code
 		var prefix string
 		switch {
 
 		case strings.HasPrefix(line, "=== RUN"):
-			color = YELLOW
+			color = fg.Yellow
 			prefix = "=== RUN"
 
 		case strings.HasPrefix(line, "--- FAIL"):
-			color = RED
+			color = fg.Red
 			prefix = "--- FAIL"
 			err = ErrTestFailed
 
 		case strings.HasPrefix(line, "--- PASS"):
-			color = GREEN
+			color = fg.Green
 			prefix = "--- PASS"
 
 		case line == "PASS":
-			color = GREEN
+			color = fg.Green
 			prefix = "PASS"
 
-		case line == "FAIL":
-			color = RED
+		case strings.HasPrefix(line, "FAIL"):
+			color = fg.Red
 			prefix = "FAIL"
 			err = ErrTestFailed
 		}
 		// paint any values
-		if color != "" {
-			w.Write([]byte(color))
+		if color >= 30 {
+			w.Write(color.Bytes())
 			w.Write([]byte(prefix))
-			w.Write([]byte(RESET))
+			w.Write(vt.Reset.Bytes())
 			w.Write([]byte(line[len(prefix):]))
 		} else {
 			w.Write([]byte(line))
@@ -55,44 +62,3 @@ func Colorize(w io.Writer, r io.Reader) error {
 }
 
 var ErrTestFailed = errors.New("failed")
-
-const (
-	RED      = "\033[31m"
-	GREEN    = "\033[32m"
-	YELLOW   = "\033[33m"
-	WHITE    = "\033[37m"
-	BG_GREEN = "\033[42m"
-	RESET    = "\033[0m"
-)
-
-type VTCode uint
-
-/*https://www2.ccs.neu.edu/research/gpc/VonaUtils/vona/terminal/vtansi.htm#colors
-0	Reset all attributes
-1	Bright
-2	Dim
-4	Underscore
-5	Blink
-7	Reverse
-8	Hidden
-
-	Foreground Colours
-30	Black
-31	Red
-32	Green
-33	Yellow
-34	Blue
-35	Magenta
-36	Cyan
-37	White
-
-	Background Colours
-40	Black
-41	Red
-42	Green
-43	Yellow
-44	Blue
-45	Magenta
-46	Cyan
-47	White
-*/
