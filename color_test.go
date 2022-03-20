@@ -2,6 +2,7 @@ package gocolor
 
 import (
 	"bytes"
+	"errors"
 	"strings"
 	"testing"
 )
@@ -14,10 +15,12 @@ func TestColorize(t *testing.T) {
 a
 b
 PASS
+FAIL
 `
 	r := strings.NewReader(input)
-	if err := Colorize(&buf, r); err != nil {
+	err := Colorize(&buf, r)
+	if !errors.Is(ErrTestFailed, err) {
 		t.Log(buf.String())
-		t.Error(err)
+		t.Error("expect error if contains a failure")
 	}
 }

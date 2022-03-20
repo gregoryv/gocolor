@@ -7,5 +7,8 @@ import (
 )
 
 func main() {
-	gocolor.Colorize(os.Stdout, os.Stdin)
+	err := gocolor.Colorize(os.Stdout, os.Stdin)
+	if err != nil {
+		os.Exit(1)
+	}
 }

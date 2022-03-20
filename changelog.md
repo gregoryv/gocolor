@@ -6,5 +6,6 @@ and this project adheres to http://semver.org/spec/v2.0.0.html.
 
 ## [Unreleased]
 
+- Use exit code 1 if test failure is found
 - Add cmd/gocolor
 - Use yellow, green and red colors

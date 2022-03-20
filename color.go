@@ -2,12 +2,16 @@ package gocolor
 
 import (
 	"bufio"
+	"errors"
 	"io"
 	"strings"
 )
 
+// Colorize paint go test output and returns ErrTestFailed if a test
+// failure is found.
 func Colorize(w io.Writer, r io.Reader) error {
 	s := bufio.NewScanner(r)
+	var err error
 	for s.Scan() {
 		line := s.Text()
 		var color string
@@ -21,14 +25,20 @@ func Colorize(w io.Writer, r io.Reader) error {
 		case strings.HasPrefix(line, "--- FAIL"):
 			color = RED
 			prefix = "--- FAIL"
+			err = ErrTestFailed
 
 		case strings.HasPrefix(line, "--- PASS"):
 			color = GREEN
 			prefix = "--- PASS"
 
-		case strings.HasPrefix(line, "PASS"):
+		case line == "PASS":
 			color = GREEN
 			prefix = "PASS"
+
+		case line == "FAIL":
+			color = RED
+			prefix = "FAIL"
+			err = ErrTestFailed
 		}
 		// paint any values
 		if color != "" {
@@ -41,8 +51,10 @@ func Colorize(w io.Writer, r io.Reader) error {
 		}
 		w.Write([]byte("\n"))
 	}
-	return s.Err()
+	return err
 }
+
+var ErrTestFailed = errors.New("failed")
 
 const (
 	RED      = "\033[31m"
