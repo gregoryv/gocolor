@@ -10,9 +10,9 @@ import (
 func TestColorize(t *testing.T) {
 	var buf bytes.Buffer
 	input := `=== RUN   TestSomething
---- PASS   TestSomething
+--- PASS:   TestSomething
 --- FAIL
---- SKIP
+--- SKIP:
 a
 b
 PASS
@@ -30,8 +30,4 @@ FAIL
 
 func TestNothing(t *testing.T) {
 	t.SkipNow()
-}
-
-func TestAFailure(t *testing.T) {
-	t.Fail()
 }
