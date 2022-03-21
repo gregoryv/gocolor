@@ -12,10 +12,12 @@ func TestColorize(t *testing.T) {
 	input := `=== RUN   TestSomething
 --- PASS   TestSomething
 --- FAIL
+--- SKIP
 a
 b
 PASS
 FAIL
+
 `
 	r := strings.NewReader(input)
 	err := Colorize(&buf, r)
@@ -24,4 +26,12 @@ FAIL
 		t.Log(buf.String())
 		t.Error("expect error if contains a failure")
 	}
+}
+
+func TestNothing(t *testing.T) {
+	t.SkipNow()
+}
+
+func TestAFailure(t *testing.T) {
+	t.Fail()
 }

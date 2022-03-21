@@ -11,11 +11,12 @@ import (
 
 var (
 	fg = vt100.ForegroundColors()
+	bg = vt100.BackgroundColors()
 	vt = vt100.Attributes()
 )
 
-// Colorize paint go test output and returns ErrTestFailed if a test
-// failure is found.
+// Colorize go test output and returns ErrTestFailed if a test failure
+// is found.
 func Colorize(w io.Writer, r io.Reader) error {
 	s := bufio.NewScanner(r)
 	var err error
@@ -34,9 +35,13 @@ func Colorize(w io.Writer, r io.Reader) error {
 			prefix = "--- FAIL"
 			err = ErrTestFailed
 
-		case strings.HasPrefix(line, "--- PASS"):
+		case strings.HasPrefix(line, "--- SKIP:"):
+			color = fg.Cyan
+			prefix = "--- SKIP "
+
+		case strings.HasPrefix(line, "--- PASS:"):
 			color = fg.Green
-			prefix = "--- PASS"
+			prefix = "--- PASS "
 
 		case line == "PASS":
 			color = fg.Green
