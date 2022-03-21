@@ -30,9 +30,9 @@ func Colorize(w io.Writer, r io.Reader) error {
 			color = fg.Yellow
 			prefix = "=== RUN"
 
-		case strings.HasPrefix(line, "--- FAIL"):
+		case strings.HasPrefix(line, "--- FAIL:"):
 			color = fg.Red
-			prefix = "--- FAIL"
+			prefix = "--- FAIL "
 			err = ErrTestFailed
 
 		case strings.HasPrefix(line, "--- SKIP:"):
