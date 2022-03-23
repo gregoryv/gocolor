@@ -11,8 +11,10 @@ func TestColorize(t *testing.T) {
 	var buf bytes.Buffer
 	input := `=== RUN   TestSomething
 --- PASS:   TestSomething
+    --- PASS:
 --- FAIL:
 --- SKIP:
+
 a
 b
 PASS
@@ -28,10 +30,15 @@ FAIL
 	}
 }
 
-func TestNothing(t *testing.T) {
-	t.SkipNow()
+func TestX(t *testing.T) {
+	t.Run("", func(t *testing.T) {
+		t.Run("x", func(t *testing.T) {
+			//t.Fail()
+		})
+		t.Run("", func(t *testing.T) {})
+	})
 }
 
-func TestFail(t *testing.T) {
-	//t.Fail()
+func TestNothing(t *testing.T) {
+	t.SkipNow()
 }

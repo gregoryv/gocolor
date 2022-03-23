@@ -26,22 +26,22 @@ func Colorize(w io.Writer, r io.Reader) error {
 		var prefix string
 		switch {
 
-		case strings.HasPrefix(line, "=== RUN"):
+		case strings.Contains(line, "=== RUN"):
 			color = fg.Yellow
 			prefix = "=== RUN"
 
-		case strings.HasPrefix(line, "--- FAIL:"):
+		case strings.Contains(line, "--- FAIL:"):
 			color = fg.Red
-			prefix = "--- FAIL "
+			prefix = "--- FAIL:"
 			err = ErrTestFailed
 
-		case strings.HasPrefix(line, "--- SKIP:"):
+		case strings.Contains(line, "--- SKIP:"):
 			color = fg.Cyan
-			prefix = "--- SKIP "
+			prefix = "--- SKIP:"
 
-		case strings.HasPrefix(line, "--- PASS:"):
+		case strings.Contains(line, "--- PASS:"):
 			color = fg.Green
-			prefix = "--- PASS "
+			prefix = "--- PASS:"
 
 		case line == "PASS":
 			color = fg.Green
@@ -55,9 +55,10 @@ func Colorize(w io.Writer, r io.Reader) error {
 		// paint any values
 		if color >= 30 {
 			w.Write(color.Bytes())
-			w.Write([]byte(prefix))
+			i := strings.Index(line, prefix) + len(prefix)
+			w.Write([]byte(line[:i]))
 			w.Write(vt.Reset.Bytes())
-			w.Write([]byte(line[len(prefix):]))
+			w.Write([]byte(line[i:]))
 		} else {
 			w.Write([]byte(line))
 		}
