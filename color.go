@@ -2,6 +2,7 @@ package gocolor
 
 import (
 	"bufio"
+	"bytes"
 	"errors"
 	"io"
 	"strings"
@@ -20,23 +21,23 @@ func Colorize(w io.Writer, r io.Reader) error {
 		switch {
 
 		case strings.Contains(line, "=== RUN"):
-			writeColored(w, fg.Yellow, "=== RUN", line)
+			writeColored(w, yellow, "=== RUN", line)
 
 		case strings.Contains(line, "--- FAIL:"):
-			writeColored(w, fg.Red, "--- FAIL:", line)
+			writeColored(w, red, "--- FAIL:", line)
 			err = ErrTestFailed
 
 		case strings.Contains(line, "--- SKIP:"):
-			writeColored(w, fg.Cyan, "--- SKIP:", line)
+			writeColored(w, cyan, "--- SKIP:", line)
 
 		case strings.Contains(line, "--- PASS:"):
-			writeColored(w, fg.Green, "--- PASS:", line)
+			writeColored(w, green, "--- PASS:", line)
 
 		case line == "PASS":
-			writeColored(w, fg.Green, "PASS", line)
+			writeColored(w, green, "PASS", line)
 
 		case strings.HasPrefix(line, "FAIL"):
-			writeColored(w, fg.Red, "FAIL", line)
+			writeColored(w, red, "FAIL", line)
 			err = ErrTestFailed
 
 		default:
@@ -47,20 +48,27 @@ func Colorize(w io.Writer, r io.Reader) error {
 	return err
 }
 
-func writeColored(w io.Writer, color vt100.Code, prefix, line string) {
-	w.Write(color.Bytes())
-	i := strings.Index(line, prefix) + len(prefix)
-	w.Write([]byte(line[:i]))
-	w.Write(vt.Reset.Bytes())
-	w.Write([]byte(line[i:]))
+func writeColored(w io.Writer, color []byte, prefix, line string) {
+	l := []byte(line)
+	w.Write(color)
+	i := bytes.Index(l, []byte(prefix)) + len(prefix)
+	w.Write(l[:i])
+	w.Write(reset)
+	w.Write(l[i:])
 }
 
 var (
 	ErrTestFailed = errors.New("failed")
 
 	fg = vt100.ForegroundColors()
-	bg = vt100.BackgroundColors()
-	vt = vt100.Attributes()
+
+	yellow = fg.Yellow.Bytes()
+	red    = fg.Red.Bytes()
+	green  = fg.Green.Bytes()
+	cyan   = fg.Cyan.Bytes()
+
+	vt    = vt100.Attributes()
+	reset = vt.Reset.Bytes()
 
 	newLine = []byte("\n")
 )
