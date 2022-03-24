@@ -3,25 +3,15 @@ package gocolor
 import (
 	"bytes"
 	"errors"
+	"io/ioutil"
 	"strings"
 	"testing"
 )
 
 func TestColorize(t *testing.T) {
 	var buf bytes.Buffer
-	input := `=== RUN   TestSomething
---- PASS:   TestSomething
-    --- PASS:
---- FAIL:
---- SKIP:
 
-a
-b
-PASS
-FAIL
-
-`
-	r := strings.NewReader(input)
+	r := strings.NewReader(testOutput)
 	err := Colorize(&buf, r)
 	t.Log("painting input")
 	if !errors.Is(ErrTestFailed, err) {
@@ -42,3 +32,24 @@ func TestX(t *testing.T) {
 func TestNothing(t *testing.T) {
 	t.SkipNow()
 }
+
+func BenchmarkColorize(b *testing.B) {
+	r := strings.NewReader(testOutput)
+	for i := 0; i < b.N; i++ {
+		Colorize(ioutil.Discard, r)
+		r.Reset(testOutput)
+	}
+}
+
+const testOutput = `=== RUN   TestSomething
+--- PASS:   TestSomething
+    --- PASS:
+--- FAIL:
+--- SKIP:
+
+a
+b
+PASS
+FAIL
+
+`
