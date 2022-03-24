@@ -9,12 +9,6 @@ import (
 	"github.com/gregoryv/vt100"
 )
 
-var (
-	fg = vt100.ForegroundColors()
-	bg = vt100.BackgroundColors()
-	vt = vt100.Attributes()
-)
-
 // Colorize go test output and returns ErrTestFailed if a test failure
 // is found.
 func Colorize(w io.Writer, r io.Reader) error {
@@ -67,4 +61,10 @@ func Colorize(w io.Writer, r io.Reader) error {
 	return err
 }
 
-var ErrTestFailed = errors.New("failed")
+var (
+	ErrTestFailed = errors.New("failed")
+
+	fg = vt100.ForegroundColors()
+	bg = vt100.BackgroundColors()
+	vt = vt100.Attributes()
+)
