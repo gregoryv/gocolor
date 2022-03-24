@@ -17,25 +17,13 @@ func Colorize(w io.Writer, r io.Reader) error {
 	for s.Scan() {
 		line := s.Bytes()
 		switch {
+		case writeColored(w, line, yellow, "=== RUN"):
+		case writeColored(w, line, green, "--- PASS:"):
+		case writeColored(w, line, green, "PASS"):
+		case writeColored(w, line, red, "--- FAIL:"):
+		case writeColored(w, line, cyan, "--- SKIP:"):
 
-		case bytes.Contains(line, []byte("=== RUN")):
-			writeColored(w, yellow, []byte("=== RUN"), line)
-
-		case bytes.Contains(line, []byte("--- FAIL:")):
-			writeColored(w, red, []byte("--- FAIL:"), line)
-			err = ErrTestFailed
-
-		case bytes.Contains(line, []byte("--- SKIP:")):
-			writeColored(w, cyan, []byte("--- SKIP:"), line)
-
-		case bytes.Contains(line, []byte("--- PASS:")):
-			writeColored(w, green, []byte("--- PASS:"), line)
-
-		case bytes.Contains(line, []byte("PASS")):
-			writeColored(w, green, []byte("PASS"), line)
-
-		case bytes.Contains(line, []byte("FAIL")):
-			writeColored(w, red, []byte("FAIL"), line)
+		case writeColored(w, line, red, "FAIL"):
 			err = ErrTestFailed
 
 		default:
@@ -46,20 +34,23 @@ func Colorize(w io.Writer, r io.Reader) error {
 	return err
 }
 
-func writeColored(w io.Writer, color []byte, prefix, line []byte) {
-	l := []byte(line)
+func writeColored(w io.Writer, line []byte, color []byte, prefix string) bool {
+	i := bytes.Index(line, []byte(prefix))
+	if i == -1 {
+		return false
+	}
+	i += len(prefix)
 	w.Write(color)
-	i := bytes.Index(l, []byte(prefix)) + len(prefix)
-	w.Write(l[:i])
+	w.Write(line[:i])
 	w.Write(reset)
-	w.Write(l[i:])
+	w.Write(line[i:])
+	return true
 }
 
 var (
 	ErrTestFailed = errors.New("failed")
 
-	fg = vt100.ForegroundColors()
-
+	fg     = vt100.ForegroundColors()
 	yellow = fg.Yellow.Bytes()
 	red    = fg.Red.Bytes()
 	green  = fg.Green.Bytes()
