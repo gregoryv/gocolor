@@ -56,7 +56,7 @@ func Colorize(w io.Writer, r io.Reader) error {
 		} else {
 			w.Write([]byte(line))
 		}
-		w.Write([]byte("\n"))
+		w.Write(newLine)
 	}
 	return err
 }
@@ -67,4 +67,6 @@ var (
 	fg = vt100.ForegroundColors()
 	bg = vt100.BackgroundColors()
 	vt = vt100.Attributes()
+
+	newLine = []byte("\n")
 )
