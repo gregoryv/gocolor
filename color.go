@@ -20,9 +20,9 @@ func Colorize(w io.Writer, r io.Reader) error {
 		var prefix string
 		switch {
 
-		case strings.Contains(line, "=== RUN"):
+		case strings.Contains(line, RUN):
 			color = fg.Yellow
-			prefix = "=== RUN"
+			prefix = RUN
 
 		case strings.Contains(line, "--- FAIL:"):
 			color = fg.Red
@@ -45,21 +45,29 @@ func Colorize(w io.Writer, r io.Reader) error {
 			color = fg.Red
 			prefix = "FAIL"
 			err = ErrTestFailed
+		default:
+			w.Write([]byte(line))
 		}
 		// paint any values
 		if color >= 30 {
-			w.Write(color.Bytes())
-			i := strings.Index(line, prefix) + len(prefix)
-			w.Write([]byte(line[:i]))
-			w.Write(vt.Reset.Bytes())
-			w.Write([]byte(line[i:]))
-		} else {
-			w.Write([]byte(line))
+			writeColored(w, color, prefix, line)
 		}
 		w.Write(newLine)
 	}
 	return err
 }
+
+func writeColored(w io.Writer, color vt100.Code, prefix, line string) {
+	w.Write(color.Bytes())
+	i := strings.Index(line, prefix) + len(prefix)
+	w.Write([]byte(line[:i]))
+	w.Write(vt.Reset.Bytes())
+	w.Write([]byte(line[i:]))
+}
+
+const (
+	RUN = "=== RUN"
+)
 
 var (
 	ErrTestFailed = errors.New("failed")
