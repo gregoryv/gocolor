@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"errors"
 	"io"
-	"strings"
 
 	"github.com/gregoryv/vt100"
 )
@@ -16,28 +15,27 @@ func Colorize(w io.Writer, r io.Reader) error {
 	s := bufio.NewScanner(r)
 	var err error
 	for s.Scan() {
-		line := s.Text()
-
+		line := s.Bytes()
 		switch {
 
-		case strings.Contains(line, "=== RUN"):
-			writeColored(w, yellow, "=== RUN", line)
+		case bytes.Contains(line, []byte("=== RUN")):
+			writeColored(w, yellow, []byte("=== RUN"), line)
 
-		case strings.Contains(line, "--- FAIL:"):
-			writeColored(w, red, "--- FAIL:", line)
+		case bytes.Contains(line, []byte("--- FAIL:")):
+			writeColored(w, red, []byte("--- FAIL:"), line)
 			err = ErrTestFailed
 
-		case strings.Contains(line, "--- SKIP:"):
-			writeColored(w, cyan, "--- SKIP:", line)
+		case bytes.Contains(line, []byte("--- SKIP:")):
+			writeColored(w, cyan, []byte("--- SKIP:"), line)
 
-		case strings.Contains(line, "--- PASS:"):
-			writeColored(w, green, "--- PASS:", line)
+		case bytes.Contains(line, []byte("--- PASS:")):
+			writeColored(w, green, []byte("--- PASS:"), line)
 
-		case line == "PASS":
-			writeColored(w, green, "PASS", line)
+		case bytes.Contains(line, []byte("PASS")):
+			writeColored(w, green, []byte("PASS"), line)
 
-		case strings.HasPrefix(line, "FAIL"):
-			writeColored(w, red, "FAIL", line)
+		case bytes.Contains(line, []byte("FAIL")):
+			writeColored(w, red, []byte("FAIL"), line)
 			err = ErrTestFailed
 
 		default:
@@ -48,7 +46,7 @@ func Colorize(w io.Writer, r io.Reader) error {
 	return err
 }
 
-func writeColored(w io.Writer, color []byte, prefix, line string) {
+func writeColored(w io.Writer, color []byte, prefix, line []byte) {
 	l := []byte(line)
 	w.Write(color)
 	i := bytes.Index(l, []byte(prefix)) + len(prefix)
