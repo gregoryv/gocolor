@@ -34,10 +34,6 @@ FAIL
 
 func TestX(t *testing.T) {
 	t.Run("", func(t *testing.T) {
-		t.Run("x", func(t *testing.T) {
-			//t.Fail()
-		})
-		t.Run("", func(t *testing.T) {})
 	})
 }
 
@@ -58,6 +54,6 @@ func BenchmarkColorize(b *testing.B) {
 	}
 }
 
-func xTestAFailure(t *testing.T) {
+func TestAFailure(t *testing.T) {
 	t.Fail()
 }
