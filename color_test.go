@@ -57,3 +57,7 @@ func BenchmarkColorize(b *testing.B) {
 		r.Reset(data)
 	}
 }
+
+func xTestAFailure(t *testing.T) {
+	t.Fail()
+}
