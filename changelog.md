@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on http://keepachangelog.com/en/1.0.0/
 and this project adheres to http://semver.org/spec/v2.0.0.html.
 
-## [unreleased]
+## [0.4.0] - 2022-11-05
 
 - Color coverage statement result, green if 100%, magenta otherwise
 - Add usage to cmd/gocolor
