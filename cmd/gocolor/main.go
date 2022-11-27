@@ -15,9 +15,6 @@ func main() {
 	usage := cli.Usage()
 	usage.Example("custom color by regexp",
 		`$ gocolor "error.*:red" "info.*:green"`,
-		"",
-		"custom value is a space delimited list of REGEXP:COLOR",
-		"",
 	)
 	cli.Parse()
 	custom := gocolor.NewCustom(expr...)
