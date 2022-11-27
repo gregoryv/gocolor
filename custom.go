@@ -13,6 +13,9 @@ import (
 func NewCustom(expr ...string) *Custom {
 	c := &Custom{}
 	for _, v := range expr {
+		if v == "" {
+			continue
+		}
 		if expr, err := ParseExpr(v); err != nil {
 			log.Print(err)
 		} else {
