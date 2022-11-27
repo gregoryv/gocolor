@@ -9,4 +9,4 @@ Gocolor simplifies scanning for successful or failed test cases. For
     $ go install github.com/gregoryv/gocolor/cmd/gocolor@latest
 	$ go test -v ./... | gocolor
 	
-![](output.png)
+![](example_video.gif)
