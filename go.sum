@@ -24,10 +24,8 @@ github.com/gregoryv/qual v0.3.1/go.mod h1:dB0ZUMaE5qieQ975kKI7A4CDfg6wgcsPcSlY1S
 github.com/gregoryv/qual v0.4.0/go.mod h1:dB0ZUMaE5qieQ975kKI7A4CDfg6wgcsPcSlY1SWuq9Y=
 github.com/gregoryv/qual v0.4.2 h1:Pb8T2CRoAIYBKzwxCwfSxHyRNW20Mo8+kMtXQ8MOX5Q=
 github.com/gregoryv/qual v0.4.2/go.mod h1:qi5L/TR4lnCuIFsOC2G8dtTOui6787/lFNquekcjxmQ=
-github.com/gregoryv/vt100 v0.2.0 h1:eI6YLndVvGkERIL23Qbgq/XOy17pb49ehi+ECgOBPNY=
-github.com/gregoryv/vt100 v0.2.0/go.mod h1:4zoKX5+VhT5fnIQqN10NZAmrRjbzyZrAz8bD7HPJoCo=
-github.com/gregoryv/vt100 v0.3.0 h1:OErFT1deZXClV+FmvoA1SElLZHpGG2/H2f+k97baKwI=
-github.com/gregoryv/vt100 v0.3.0/go.mod h1:4zoKX5+VhT5fnIQqN10NZAmrRjbzyZrAz8bD7HPJoCo=
+github.com/gregoryv/vt100 v0.3.1-0.20221127092725-8cffcc9a8861 h1:TLfaAXt8/gkQz+5JwOV3JP8J8xdAFQe6MbfSPZpl5C4=
+github.com/gregoryv/vt100 v0.3.1-0.20221127092725-8cffcc9a8861/go.mod h1:4zoKX5+VhT5fnIQqN10NZAmrRjbzyZrAz8bD7HPJoCo=
 github.com/gregoryv/web v0.21.0/go.mod h1:wAsePq4XiIuLmEOI9qNpgaK3rdXY3huHkwNGjUuvngw=
 github.com/gregoryv/web v0.22.0 h1:SzcU048ibWFzeQIovDCQ4RBEhkr8UMkIonzSsAmt3qg=
 github.com/gregoryv/web v0.22.0/go.mod h1:ZNxc8oE709qkkeVZw377xfpsR/kgCu+TRIfRsF4hXEY=

@@ -6,6 +6,8 @@ import (
 	"log"
 	"regexp"
 	"strings"
+
+	"github.com/gregoryv/vt100"
 )
 
 func NewCustom(expr ...string) *Custom {
@@ -53,8 +55,11 @@ func ParseExpr(v string) (*Expr, error) {
 		return nil, err
 	}
 	// create colored replacement
-	repl := fg.ByName(parts[1]).Bytes()
-	repl = append(repl, []byte("$1")...)
+	attr, err := vt100.ParseCodeBytes(parts[1])
+	if err != nil {
+		return nil, err
+	}
+	repl := append(attr, []byte("$1")...)
 	repl = append(repl, reset...)
 
 	return &Expr{

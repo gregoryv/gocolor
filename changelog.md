@@ -6,6 +6,7 @@ and this project adheres to http://semver.org/spec/v2.0.0.html.
 
 ## [unreleased]
 
+- COLOREXP supports multiple attributes, eg. .*:red;bgyellow
 - Update help
 
 ## [0.6.0] - 2022-11-27
