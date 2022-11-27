@@ -9,17 +9,18 @@ import (
 
 func main() {
 	var (
-		cli    = cmdline.NewBasicParser()
-		custom = cli.Option("-c, --custom").String("")
+		cli  = cmdline.NewBasicParser()
+		expr = cli.NamedArg("COLOREXP...").Strings("")
 	)
 	usage := cli.Usage()
 	usage.Example("custom color by regexp",
-		`$ gocolor -c "error.*:red info.*:green"`,
+		`$ gocolor "error.*:red" "info.*:green"`,
 		"",
 		"custom value is a space delimited list of REGEXP:COLOR",
 		"",
 	)
 	cli.Parse()
+	custom := gocolor.NewCustom(expr...)
 	err := gocolor.Colorize(os.Stdout, os.Stdin, custom)
 	if err != nil {
 		os.Exit(1)
