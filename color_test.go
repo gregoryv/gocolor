@@ -9,6 +9,18 @@ import (
 	"testing"
 )
 
+func TestColorize_custom(t *testing.T) {
+	var buf bytes.Buffer
+	const output = `ttsub out CONNECT ---- -------- MQTT5 ttsub 0s 20 bytes
+b something`
+	r := strings.NewReader(output)
+	err := Colorize(&buf, r, "ttsub:red PAYLOAD:green")
+	if !errors.Is(ErrTestFailed, err) {
+		t.Log(buf.String())
+		t.Error("expect error if contains a failure")
+	}
+}
+
 func TestColorize(t *testing.T) {
 	var buf bytes.Buffer
 	const testOutput = `=== RUN   TestSomething
@@ -24,7 +36,7 @@ FAIL
 
 `
 	r := strings.NewReader(testOutput)
-	err := Colorize(&buf, r)
+	err := Colorize(&buf, r, "")
 	t.Log("painting input")
 	if !errors.Is(ErrTestFailed, err) {
 		t.Log(buf.String())
@@ -49,7 +61,7 @@ func BenchmarkColorize(b *testing.B) {
 	r := bytes.NewReader(data)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		Colorize(ioutil.Discard, r)
+		Colorize(ioutil.Discard, r, "")
 		r.Reset(data)
 	}
 }

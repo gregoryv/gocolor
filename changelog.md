@@ -6,6 +6,7 @@ and this project adheres to http://semver.org/spec/v2.0.0.html.
 
 ## [unreleased]
 
+- Add flag --custom for coloring by regexp
 - Use gregoryv/cmdline
 
 ## [0.4.0] - 2022-11-05

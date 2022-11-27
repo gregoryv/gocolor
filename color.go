@@ -6,18 +6,21 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"regexp"
+	"strings"
 
 	"github.com/gregoryv/vt100"
 )
 
 // Colorize go test output and returns ErrTestFailed if a test failure
 // is found.
-func Colorize(w io.Writer, r io.Reader) error {
+func Colorize(w io.Writer, r io.Reader, custom string) error {
 	s := bufio.NewScanner(r)
 	var err error
 	for s.Scan() {
 		line := s.Bytes()
 		switch {
+		case writeCustom(w, line, custom):
 		case writeColored(w, line, yellow, "=== RUN"):
 		case writeColored(w, line, green, "--- PASS:"):
 		case writeColored(w, line, green, "PASS"):
@@ -34,6 +37,35 @@ func Colorize(w io.Writer, r io.Reader) error {
 		w.Write(newLine)
 	}
 	return err
+}
+
+func writeCustom(w io.Writer, line []byte, custom string) bool {
+	var done bool
+	for _, custom := range strings.Split(custom, " ") {
+		if custom == "" {
+			continue
+		}
+		parts := strings.Split(custom, ":")
+		if len(parts) != 2 {
+			continue
+		}
+		re, err := regexp.Compile("(" + parts[0] + ")")
+		if err != nil {
+			continue
+		}
+		color := fg.ByName(parts[1]).Bytes()
+		if !done && !re.Match(line) {
+			continue
+		}
+		done = true
+		repl := append(color, []byte("$1")...)
+		repl = append(repl, reset...)
+		line = re.ReplaceAll(line, repl)
+	}
+	if done {
+		w.Write(line)
+	}
+	return done
 }
 
 func writeColored(w io.Writer, line []byte, color []byte, prefix string) bool {
