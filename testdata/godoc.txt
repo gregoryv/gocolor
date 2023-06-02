@@ -1,0 +1,50 @@
+package os // import "os"
+
+Package os provides a platform-independent interface to operating system
+functionality. The design is Unix-like, although the error handling is Go-like;
+
+The file's data can then be read into a slice of bytes. Read and Write take
+their byte counts from the length of the argument slice.
+
+    data := make([]byte, 100)
+    count, err := file.Read(data)
+    if err != nil {
+    	log.Fatal(err)
+    }
+    fmt.Printf("read %d bytes: %q\n", count, data[:count])
+
+Note: The maximum number of concurrent operations on a File may be limited by
+the OS or the system. The number should be high, but exceeding it may degrade
+performance or cause other issues.
+
+const O_RDONLY int = syscall.O_RDONLY ...
+const SEEK_SET int = 0 ...
+const DevNull = "/dev/null"
+var ErrInvalid = fs.ErrInvalid ...
+var Stdin = NewFile(uintptr(syscall.Stdin), "/dev/stdin") ...
+var Args []string
+var ErrProcessDone = errors.New("os: process already finished")
+func Chdir(dir string) error
+func Chtimes(name string, atime time.Time, mtime time.Time) error
+func Clearenv()
+
+func MkdirAll(path string, perm FileMode) error
+
+func UserHomeDir() (string, error)
+type DirEntry = fs.DirEntry
+    func ReadDir(name string) ([]DirEntry, error)
+type File struct{ ... }
+    func Create(name string) (*File, error)
+    func OpenFile(name string, flag int, perm FileMode) (*File, error)
+type FileInfo = fs.FileInfo
+    func Lstat(name string) (FileInfo, error)
+    func Stat(name string) (FileInfo, error)
+type FileMode = fs.FileMode
+type PathError = fs.PathError
+type Process struct{ ... }
+    func FindProcess(pid int) (*Process, error)
+    func StartProcess(name string, argv []string, attr *ProcAttr) (*Process, error)
+type ProcessState struct{ ... }
+type Signal interface{ ... }
+    var Interrupt Signal = syscall.SIGINT ...
+type SyscallError struct{ ... }

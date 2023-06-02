@@ -6,6 +6,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"strings"
+	"sync"
 
 	"github.com/gregoryv/vt100"
 )
@@ -15,8 +17,14 @@ import (
 func Colorize(w io.Writer, r io.Reader, custom *Custom) error {
 	s := bufio.NewScanner(r)
 	var err error
+	var firstline sync.Once
 	for s.Scan() {
 		line := s.Bytes()
+		firstline.Do(func() {
+			if strings.HasPrefix(string(line), "package ") {
+				w = NewGodocColors(w)
+			}
+		})
 		switch {
 		case custom.Colorize(w, line):
 		case writeColored(w, line, yellow, "=== RUN"):
@@ -25,7 +33,6 @@ func Colorize(w io.Writer, r io.Reader, custom *Custom) error {
 		case writeColored(w, line, red, "--- FAIL:"):
 		case writeColored(w, line, cyan, "--- SKIP:"):
 		case writeColoredCoverage(w, line):
-
 		case writeColored(w, line, red, "FAIL"):
 			err = ErrTestFailed
 

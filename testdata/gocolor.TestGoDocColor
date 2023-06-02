@@ -1,0 +1,50 @@
+[35mpackage[0m os // import "os"
+
+Package os provides a platform-independent interface to operating system
+functionality. The design is Unix-like, although the error handling is Go-like;
+
+The file's data can then be read into a slice of bytes. Read and Write take
+their byte counts from the length of the argument slice.
+
+    data := make([]byte, 100)
+    count, err := file.Read(data)
+    if err != nil {
+    	log.Fatal(err)
+    }
+    fmt.Printf("read %d bytes: %q\n", count, data[:count])
+
+Note: The maximum number of concurrent operations on a File may be limited by
+the OS or the system. The number should be high, but exceeding it may degrade
+performance or cause other issues.
+
+[35mconst[0m O_RDONLY int = syscall.O_RDONLY ...
+[35mconst[0m SEEK_SET int = 0 ...
+[35mconst[0m DevNull = "/dev/null"
+[35mvar[0m ErrInvalid = fs.ErrInvalid ...
+[35mvar[0m Stdin = NewFile(uintptr([36msyscall.Stdin[0m), "/dev/stdin") ...
+[35mvar[0m Args []string
+[35mvar[0m ErrProcessDone = errors.New("os: process already finished")
+[35mfunc[0m Chdir(dir [36mstring[0m) error
+[35mfunc[0m Chtimes(name [36mstring[0m, atime [36mtime.Time[0m, mtime [36mtime.Time[0m) error
+[35mfunc[0m Clearenv()
+
+[35mfunc[0m MkdirAll(path [36mstring[0m, perm [36mFileMode[0m) error
+
+[35mfunc[0m UserHomeDir() ([36mstring[0m, [36merror[0m)
+[35mtype[0m DirEntry = fs.DirEntry
+[35m    func[0m ReadDir(name [36mstring[0m) ([][36mDirEntry[0m, [36merror[0m)
+[35mtype[0m File [35mstruct[0m{ ... }
+[35m    func[0m Create(name [36mstring[0m) (*[36mFile[0m, [36merror[0m)
+[35m    func[0m OpenFile(name [36mstring[0m, flag [36mint[0m, perm [36mFileMode[0m) (*[36mFile[0m, [36merror[0m)
+[35mtype[0m FileInfo = fs.FileInfo
+[35m    func[0m Lstat(name [36mstring[0m) ([36mFileInfo[0m, [36merror[0m)
+[35m    func[0m Stat(name [36mstring[0m) ([36mFileInfo[0m, [36merror[0m)
+[35mtype[0m FileMode = fs.FileMode
+[35mtype[0m PathError = fs.PathError
+[35mtype[0m Process [35mstruct[0m{ ... }
+[35m    func[0m FindProcess(pid [36mint[0m) (*[36mProcess[0m, [36merror[0m)
+[35m    func[0m StartProcess(name [36mstring[0m, argv [][36mstring[0m, attr *[36mProcAttr[0m) (*[36mProcess[0m, [36merror[0m)
+[35mtype[0m ProcessState [35mstruct[0m{ ... }
+[35mtype[0m Signal interface{ ... }
+    var Interrupt Signal = syscall.SIGINT ...
+[35mtype[0m SyscallError [35mstruct[0m{ ... }
