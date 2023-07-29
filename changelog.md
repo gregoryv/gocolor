@@ -6,6 +6,7 @@ and this project adheres to http://semver.org/spec/v2.0.0.html.
 
 ## [unreleased]
 
+- Add flag -c, --color-palette showing color names and attributes
 - Colorize go doc output if firstline starts with "package "
 
 ## [0.7.0] - 2022-11-27
