@@ -6,6 +6,8 @@ and this project adheres to http://semver.org/spec/v2.0.0.html.
 
 ## [unreleased]
 
+- Color .go filepaths inside the current working dir "cyan"
+- Color .go filepaths using "cyan;dim"
 - Fix problem of matching ':' character
 - Add flag -c, --color-palette showing color names and attributes
 - Colorize go doc output if firstline starts with "package "

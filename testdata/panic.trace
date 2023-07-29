@@ -1,0 +1,20 @@
+panic:  [recovered]
+        panic: 
+
+goroutine 19 [running]:
+testing.tRunner.func1.2({0x525bc0, 0x581390})
+        /home/gregory/dl/go1/go1.21rc2/src/testing/testing.go:1545 +0x238
+testing.tRunner.func1()
+        /home/gregory/dl/go1/go1.21rc2/src/testing/testing.go:1548 +0x397
+panic({0x525bc0?, 0x581390?})
+        /home/gregory/dl/go1/go1.21rc2/src/runtime/panic.go:914 +0x21f
+github.com/gregoryv/gocolor.writeColored({0x581dc0, 0xc0001246c0}, {0xc000173000, 0x17, 0x1000}, {0xc000130048, 0x5, 0x8}, {0x54f534, 0x7})
+        /home/gregory/src/github.com/gregoryv/gocolor/color.go:57 +0x192
+github.com/gregoryv/gocolor.Colorize({0x581dc0, 0xc0001246c0}, {0x581e00?, 0xc00015e260?}, 0xc000056760?)
+        /home/gregory/src/github.com/gregoryv/gocolor/color.go:30 +0x23b
+github.com/gregoryv/gocolor.TestColorize(0xc000102d00)
+        /home/gregory/src/github.com/gregoryv/gocolor/color_test.go:37 +0x9c
+testing.tRunner(0xc000102d00, 0x55b728)
+        /home/gregory/dl/go1/go1.21rc2/src/testing/testing.go:1595 +0xff
+created by testing.(*T).Run in goroutine 1
+        /home/gregory/dl/go1/go1.21rc2/src/testing/testing.go:1648 +0x3ad

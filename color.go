@@ -6,6 +6,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"os"
+	"regexp"
 	"strings"
 	"sync"
 
@@ -27,6 +29,8 @@ func Colorize(w io.Writer, r io.Reader, custom *Custom) error {
 		})
 		switch {
 		case custom.Colorize(w, line):
+		case writeColoredWorkingDirPath(w, line):
+		case writeColoredPath(w, line):
 		case writeColored(w, line, yellow, "=== RUN"):
 		case writeColored(w, line, green, "--- PASS:"):
 		case writeColored(w, line, green, "PASS"):
@@ -42,6 +46,36 @@ func Colorize(w io.Writer, r io.Reader, custom *Custom) error {
 		w.Write(newLine)
 	}
 	return err
+}
+
+var pathPattern = `\/(?:[\w.-]+\/)*[\w.-]+\.go`
+var pathExpr = regexp.MustCompile(pathPattern)
+
+// only match files in the working directory
+func writeColoredWorkingDirPath(w io.Writer, line []byte) bool {
+	if !pathExpr.Match(line) {
+		return false
+	}
+	dir, err := os.Getwd()
+	if err != nil {
+		return false
+	}
+	if !bytes.Contains(line, []byte(dir)) {
+		return false
+	}
+
+	expr, _ := ParseExpr(pathPattern + ":cyan") // brighter cyan
+	custom := Custom{[]*Expr{expr}}
+	return custom.Colorize(w, line)
+}
+
+func writeColoredPath(w io.Writer, line []byte) bool {
+	if !pathExpr.Match(line) {
+		return false
+	}
+	expr, _ := ParseExpr(pathPattern + ":cyan;dim") // dimmer cyan
+	custom := Custom{[]*Expr{expr}}
+	return custom.Colorize(w, line)
 }
 
 func writeColored(w io.Writer, line []byte, color []byte, prefix string) bool {
