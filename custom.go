@@ -48,11 +48,14 @@ func ParseExpr(v string) (*Expr, error) {
 	if v == "" {
 		return nil, fmt.Errorf("Expr: empty")
 	}
-	parts := strings.Split(v, ":")
-	if len(parts) != 2 {
+	i := strings.LastIndex(v, ":")
+	if i == -1 {
 		return nil, fmt.Errorf("Expr: missing ':'")
 	}
 
+	parts := make([]string, 2)
+	parts[0] = v[:i]
+	parts[1] = v[i+1:]
 	re, err := regexp.Compile("(" + parts[0] + ")")
 	if err != nil {
 		return nil, err

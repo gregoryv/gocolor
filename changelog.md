@@ -6,6 +6,7 @@ and this project adheres to http://semver.org/spec/v2.0.0.html.
 
 ## [unreleased]
 
+- Fix problem of matching ':' character
 - Add flag -c, --color-palette showing color names and attributes
 - Colorize go doc output if firstline starts with "package "
 
