@@ -1,0 +1,3 @@
+# wb [wb.test]
+./reader.go:35:9: cannot use 1 (untyped int constant) as bool value in return statement
+FAIL wb [build failed]
