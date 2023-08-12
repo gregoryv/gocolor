@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/gregoryv/cmdline"
 	"github.com/gregoryv/gocolor"
@@ -26,11 +28,25 @@ func main() {
 		os.Exit(0)
 	}
 
-	custom := gocolor.NewCustom(expr...)
+	// look for any .gocolor file here or in home directory
+	filename := filepath.Join(os.Getenv("HOME"), ".gocolor")
+	home := loadExpr(filename)
+	local := loadExpr(".gocolor")
+	all := append(expr, local...)
+	all = append(all, home...)
+	custom := gocolor.NewCustom(all...)
 	err := gocolor.Colorize(os.Stdout, os.Stdin, custom)
 	if err != nil {
 		os.Exit(1)
 	}
+}
+
+func loadExpr(filename string) []string {
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		return nil
+	}
+	return strings.Split(string(data), "\n")
 }
 
 func colorPalette() []byte {

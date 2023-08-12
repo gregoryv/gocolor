@@ -6,6 +6,8 @@ and this project adheres to http://semver.org/spec/v2.0.0.html.
 
 ## [unreleased]
 
+- Look for expressions in ./.gocolor and ~/.gocolor
+
 ## [0.8.0] - 2023-07-29
 
 - Color .go filepaths inside the current working dir "cyan"
