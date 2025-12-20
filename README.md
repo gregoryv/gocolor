@@ -1,3 +1,5 @@
+ARCHIVED! moved to https://sogvin.com/gocolor
+
 gocolor - basic coloring of go test output
 
 ![](gocolor_logo.png)
